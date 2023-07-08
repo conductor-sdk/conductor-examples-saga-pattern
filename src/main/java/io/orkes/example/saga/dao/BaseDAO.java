@@ -1,15 +1,12 @@
 package io.orkes.example.saga.dao;
 
-import io.orkes.example.saga.pojos.Rider;
-
 import java.sql.*;
-import java.util.ArrayList;
 
-public class DBAccessor {
+public class BaseDAO {
 
     private String url;
 
-    public DBAccessor(String url) {
+    public BaseDAO(String url) {
         this.url = url;
     }
 

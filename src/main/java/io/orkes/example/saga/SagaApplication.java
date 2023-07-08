@@ -1,6 +1,6 @@
 package io.orkes.example.saga;
 
-import io.orkes.example.saga.dao.DBAccessor;
+import io.orkes.example.saga.dao.BaseDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -26,7 +26,7 @@ public class SagaApplication {
 
 	@Autowired
 	private final Environment env;
-	private static final DBAccessor db = new DBAccessor("jdbc:sqlite:cab_saga.db");
+	private static final BaseDAO db = new BaseDAO("jdbc:sqlite:cab_saga.db");
 
 	public static void main(String[] args) {
 		SpringApplication.run(SagaApplication.class, args);

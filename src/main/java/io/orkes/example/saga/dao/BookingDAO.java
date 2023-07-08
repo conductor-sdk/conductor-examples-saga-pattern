@@ -8,7 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.TimeZone;
 import java.util.Date;
 
-public class BookingDAO extends DBAccessor {
+public class BookingDAO extends BaseDAO {
 
     public BookingDAO(String url) {
         super(url);

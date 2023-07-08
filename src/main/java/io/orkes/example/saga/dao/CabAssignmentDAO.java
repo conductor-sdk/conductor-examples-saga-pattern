@@ -1,6 +1,5 @@
 package io.orkes.example.saga.dao;
 
-import io.orkes.example.saga.pojos.Booking;
 import io.orkes.example.saga.pojos.CabAssignment;
 
 import java.sql.Connection;
@@ -11,7 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
-public class CabAssignmentDAO extends DBAccessor {
+public class CabAssignmentDAO extends BaseDAO {
 
     public CabAssignmentDAO(String url) {
         super(url);
