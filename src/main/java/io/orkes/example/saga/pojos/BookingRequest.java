@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class BookingRequest {
     private String BookingRequestId;
-    private String riderId;
+    private int riderId;
     private String pickUpLocation;
     private String dropOffLocation;
 }

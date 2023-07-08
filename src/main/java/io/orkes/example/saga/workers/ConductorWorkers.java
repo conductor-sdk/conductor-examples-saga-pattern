@@ -1,5 +1,6 @@
 package io.orkes.example.saga.workers;
 
+import com.netflix.conductor.common.metadata.tasks.TaskResult;
 import com.netflix.conductor.sdk.workflow.task.WorkerTask;
 import io.orkes.example.saga.pojos.*;
 import io.orkes.example.saga.service.BookingService;
@@ -20,24 +21,29 @@ public class ConductorWorkers {
      * Note: Using this setting, up to 5 tasks will run in parallel, with tasks being polled every 200ms
      */
     @WorkerTask(value = "book_ride_saga", threadCount = 3, pollingInterval = 300)
-    public Map<String, Object> checkForBookingRideTask(BookingRequest bookingRequest) {
+    public TaskResult checkForBookingRideTask(BookingRequest bookingRequest) {
         String bookingId = BookingService.createBooking(bookingRequest);
 
-        Map<String, Object> result = new HashMap<>();
-        if(!bookingId.isEmpty()) {
-            result.put("bookingId", bookingId);
+        TaskResult result = new TaskResult();
+        Map<String, Object> output = new HashMap<>();
+
+        if(bookingId != null) {
+            output.put("bookingId", bookingId);
+            result.setOutputData(output);
+            result.setStatus(TaskResult.Status.COMPLETED);
         } else {
-            result.put("bookingId", "error");
+            output.put("bookingId", null);
+            result.setStatus(TaskResult.Status.FAILED);
         }
         return result;
     }
 
     @WorkerTask(value = "assign_driver_saga", threadCount = 2, pollingInterval = 300)
     public Map<String, Object> checkForDriverAssignmentTask(CabAssignmentRequest cabAssignmentRequest) {
-        String driverId = CabAssignmentService.assignDriver(cabAssignmentRequest);
+        int driverId = CabAssignmentService.assignDriver(cabAssignmentRequest);
 
         Map<String, Object> result = new HashMap<>();
-        if(driverId != "") {
+        if(driverId != 0) {
             result.put("driverId", driverId);
             result.put("bookingId", cabAssignmentRequest.getBookingId());
         } else {
@@ -49,7 +55,7 @@ public class ConductorWorkers {
 
     @WorkerTask(value = "make_payment_saga", threadCount = 2, pollingInterval = 300)
     public Map<String, Object> checkForPaymentTask(PaymentRequest paymentRequest) {
-        PaymentDetails pd = PaymentService.payForBooking(paymentRequest);
+        Payment pd = PaymentService.payForBooking(paymentRequest);
 
         Map<String, Object> result = new HashMap<>();
         if(pd != null) {

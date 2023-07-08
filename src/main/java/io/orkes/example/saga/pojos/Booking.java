@@ -1,17 +1,24 @@
 package io.orkes.example.saga.pojos;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
+import java.util.EnumMap;
 
 @Data
 public class Booking {
+
+    public enum Status {
+        PENDING,
+        ASSIGNED,
+        CONFIRMED,
+        CANCELLED
+    }
+
     private String bookingId;
-    private String riderId;
-    private String driverId;
+    private int riderId;
+    private int driverId;
     private String pickUpLocation;
-    private String dropOfLocation;
+    private String dropOffLocation;
+    private long createdAt;
+    private Status status;
 }

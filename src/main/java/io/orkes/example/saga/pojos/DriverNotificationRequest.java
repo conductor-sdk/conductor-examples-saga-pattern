@@ -4,8 +4,8 @@ import lombok.Data;
 
 @Data
 public class DriverNotificationRequest {
-    String driverId;
-    String dropoff;
-    String pickup;
+    int driverId;
+    String dropOff;
+    String pickUp;
     String bookingId;
 }

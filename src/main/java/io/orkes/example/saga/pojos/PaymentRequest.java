@@ -5,5 +5,5 @@ import lombok.Data;
 @Data
 public class PaymentRequest {
     private String bookingId;
-    private String riderId;
+    private int riderId;
 }
