@@ -50,6 +50,7 @@ public class BookingService {
 
     public static boolean assignDriverToBooking(Booking booking, int driverId) {
         booking.setDriverId(driverId);
+        booking.setStatus(Booking.Status.ASSIGNED);
         return bookingDAO.updateBooking(booking);
     }
 }

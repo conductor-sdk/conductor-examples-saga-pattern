@@ -71,20 +71,4 @@ public class BookingDAO extends BaseDAO {
             System.out.println(e.getMessage());
         }
     }
-
-//    public String updateBooking(Booking booking) {
-//        String sql = "UPDATE bookings(bookingId,riderId,pickUpLocation,dropOffLocation) VALUES(?,?,?,?) WHERE";
-//
-//        try (Connection conn = this.connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
-//            pstmt.setString(1, booking.getBookingId());
-//            pstmt.setInt(2, booking.getRiderId());
-//            pstmt.setString(3, booking.getPickUpLocation());
-//            pstmt.setString(4, booking.getDropOfLocation());
-//            pstmt.executeUpdate();
-//        } catch (SQLException e) {
-//            System.out.println(e.getMessage());
-//            return e.getMessage();
-//        }
-//        return "";
-//    }
 }

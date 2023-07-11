@@ -34,7 +34,7 @@ public class WorkflowService {
         inputData.put("pickUpLocation", bookingRequest.getPickUpLocation());
         request.setInput(inputData);
 
-        String workflowId = "332";
+        String workflowId = "";
         try {
             workflowId = workflowClient.startWorkflow(request);
             log.info("Workflow id: {}", workflowId);

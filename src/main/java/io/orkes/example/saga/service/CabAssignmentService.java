@@ -34,7 +34,7 @@ public class CabAssignmentService {
             return 0;
         }
 
-//        BookingService.assignDriverToBooking(booking, driverId);
+        BookingService.assignDriverToBooking(booking, driverId);
 
         log.info("Assigned driver {} to booking with id: {}", driverId, cabAssignmentRequest.getBookingId());
 
