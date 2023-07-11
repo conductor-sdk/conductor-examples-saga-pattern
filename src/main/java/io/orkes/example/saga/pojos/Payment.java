@@ -14,4 +14,5 @@ public class Payment {
     private int paymentMethodId;
     private Status status;
     private long createdAt;
+    private String errorMsg;
 }

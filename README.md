@@ -44,3 +44,22 @@ We can use two approaches:
        }
    }'
    ```
+   
+#### Triggering the cancellation workflow to simulate rollback of distributed transactions
+
+* Create a booking for rider 3 who doesn't have a payment method seeded.
+   ```
+   curl --location 'https://play.orkes.io/api/workflow' \
+   --header 'X-Authorization: <JWT Token>' \
+   --data '{
+       "name": "cab_service_saga_booking_wf",
+       "version": 1,
+       "input": {
+           "pickUpLocation": "150 East 52nd Street, New York, NY 10045",
+           "dropOffLocation": "120 West 81st Street, New York, NY 10012",
+           "riderId": 3
+       }
+   }'
+   ```
+
+* This will cause the workflow to fail and trigger the cancellation workflow.

@@ -106,7 +106,9 @@ public class BaseDAO {
                 + "	details text NOT NULL\n"
                 + ");";
 
-        execute(sql);
+        if(execute(sql)) {
+            seedPaymentMethods();
+        }
     }
 
     private void createPaymentsTableCreationSqlStmt() {
@@ -141,6 +143,16 @@ public class BaseDAO {
                 "INSERT INTO drivers(name,contact) VALUES('Wayne Stevens','+12520711467');",
                 "INSERT INTO drivers(name,contact) VALUES('Jim Willis','+16466281981');",
                 "INSERT INTO drivers(name,contact) VALUES('Tom Cruise','+18659581430');"
+        };
+
+        for (int i = 0; i < queries.length; i++) {
+            execute(queries[i]);
+        }
+    }
+
+    private void seedPaymentMethods() {
+        String[] queries = {
+                "INSERT INTO payment_methods(rider_id, details) VALUES(1,'Credit Card|1123 4425 1345 3323|10/27|123');",
         };
 
         for (int i = 0; i < queries.length; i++) {

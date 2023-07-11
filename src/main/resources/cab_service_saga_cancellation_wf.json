@@ -13,8 +13,8 @@
       "decisionCases": {
         "payment": [
           {
-            "name": "cancel_payment",
-            "taskReferenceName": "cancel_payment_ref",
+            "name": "cancel_payment_saga",
+            "taskReferenceName": "cancel_payment_saga_ref",
             "inputParameters": {},
             "type": "SIMPLE",
             "decisionCases": {},
@@ -29,8 +29,8 @@
             "onStateChange": {}
           },
           {
-            "name": "cancel_driver_assignment",
-            "taskReferenceName": "cancel_driver_assignment_2_ref",
+            "name": "cancel_driver_assignment_saga",
+            "taskReferenceName": "cancel_driver_assignment_saga_ref",
             "inputParameters": {},
             "type": "SIMPLE",
             "decisionCases": {},
@@ -47,8 +47,8 @@
         ],
         "assignment": [
           {
-            "name": "cancel_driver_assignment",
-            "taskReferenceName": "cancel_driver_assignment_ref",
+            "name": "cancel_driver_assignment_saga",
+            "taskReferenceName": "cancel_driver_assignment_saga_1_ref",
             "inputParameters": {},
             "type": "SIMPLE",
             "decisionCases": {},
@@ -77,8 +77,8 @@
       "onStateChange": {}
     },
     {
-      "name": "cancel_booking",
-      "taskReferenceName": "simple_task_ulq36g_ref",
+      "name": "cancel_booking_saga",
+      "taskReferenceName": "cancel_booking_saga_ref",
       "inputParameters": {},
       "type": "SIMPLE",
       "decisionCases": {},
@@ -102,8 +102,8 @@
       "forkTasks": [
         [
           {
-            "name": "notify_customer",
-            "taskReferenceName": "notify_customer_failure_ref",
+            "name": "notify_customer_saga",
+            "taskReferenceName": "notify_customer_saga_failure_ref",
             "inputParameters": {},
             "type": "SIMPLE",
             "decisionCases": {},
@@ -120,8 +120,8 @@
         ],
         [
           {
-            "name": "notify_driver",
-            "taskReferenceName": "notify_driver_failure_ref",
+            "name": "notify_driver_saga",
+            "taskReferenceName": "notify_driver_saga_failure_ref",
             "inputParameters": {},
             "type": "SIMPLE",
             "decisionCases": {},
@@ -171,7 +171,7 @@
   "schemaVersion": 2,
   "restartable": true,
   "workflowStatusListenerEnabled": false,
-  "ownerEmail": "abhishek.gupta@orkes.io",
+  "ownerEmail": "tester@email.com",
   "timeoutPolicy": "ALERT_ONLY",
   "timeoutSeconds": 0,
   "variables": {},

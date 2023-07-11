@@ -1,5 +1,6 @@
 package io.orkes.example.saga.workers;
 
+import com.netflix.conductor.common.metadata.tasks.Task;
 import com.netflix.conductor.common.metadata.tasks.TaskResult;
 import com.netflix.conductor.sdk.workflow.task.WorkerTask;
 import io.orkes.example.saga.pojos.*;
@@ -54,16 +55,22 @@ public class ConductorWorkers {
     }
 
     @WorkerTask(value = "make_payment_saga", threadCount = 2, pollingInterval = 300)
-    public Map<String, Object> checkForPaymentTask(PaymentRequest paymentRequest) {
-        Payment pd = PaymentService.payForBooking(paymentRequest);
+    public TaskResult checkForPaymentTask(PaymentRequest paymentRequest) {
+        TaskResult result = new TaskResult();
 
-        Map<String, Object> result = new HashMap<>();
-        if(pd != null) {
-            result.put("bookingId", pd.getBookingId());
-            result.put("status", pd.getStatus());
+        Payment payment = PaymentService.payForBooking(paymentRequest);
+        Map<String, Object> output = new HashMap<>();
+
+        if(payment.getStatus() == Payment.Status.SUCCESSFUL) {
+            output.put("bookingId", payment.getBookingId());
+            result.setStatus(TaskResult.Status.COMPLETED);
         } else {
-            result.put("pd", null);
+            output.put("error", payment.getErrorMsg());
+            result.setStatus(TaskResult.Status.FAILED);
         }
+
+        result.setOutputData(output);
+
         return result;
     }
 
