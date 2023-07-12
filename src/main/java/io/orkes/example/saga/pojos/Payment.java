@@ -7,8 +7,10 @@ public class Payment {
     public enum Status {
         PENDING,
         FAILED,
-        SUCCESSFUL
+        SUCCESSFUL,
+        CANCELED
     }
+    private int id;
     private String bookingId;
     private double amount;
     private int paymentMethodId;

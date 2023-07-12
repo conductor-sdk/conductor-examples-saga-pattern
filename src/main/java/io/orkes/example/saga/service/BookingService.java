@@ -51,4 +51,16 @@ public class BookingService {
         booking.setStatus(Booking.Status.ASSIGNED);
         return bookingDAO.updateBooking(booking);
     }
+
+    public static boolean confirmBooking(Booking booking) {
+        booking.setStatus(Booking.Status.CONFIRMED);
+        log.info("Confirming booking {}", booking.getBookingId());
+        return bookingDAO.updateBooking(booking);
+    }
+
+    public static boolean cancelBooking(Booking booking) {
+        booking.setStatus(Booking.Status.CANCELLED);
+        log.info("Cancelling booking {}", booking.getBookingId());
+        return bookingDAO.updateBooking(booking);
+    }
 }

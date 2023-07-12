@@ -7,7 +7,7 @@
       "name": "book_ride_saga",
       "taskReferenceName": "book_ride_saga_ref",
       "inputParameters": {
-        "riderId": "",
+        "riderId": "${workflow.input.riderId}",
         "pickUpLocation": "${workflow.input.pickUpLocation}",
         "dropOffLocation": "${workflow.input.dropOffLocation}"
       },
@@ -47,6 +47,24 @@
       "inputParameters": {
         "bookingId": "${assign_driver_saga_ref.output.bookingId}",
         "riderId": "${workflow.input.riderId}"
+      },
+      "type": "SIMPLE",
+      "decisionCases": {},
+      "defaultCase": [],
+      "forkTasks": [],
+      "startDelay": 0,
+      "joinOn": [],
+      "optional": false,
+      "defaultExclusiveJoinTask": [],
+      "asyncComplete": false,
+      "loopOver": [],
+      "onStateChange": {}
+    },
+    {
+      "name": "confirm_booking_saga",
+      "taskReferenceName": "confirm_booking_saga_ref",
+      "inputParameters": {
+        "bookingId": "${assign_driver_saga_ref.output.bookingId}"
       },
       "type": "SIMPLE",
       "decisionCases": {},
@@ -149,7 +167,9 @@
     "dropOffLocation",
     "riderId"
   ],
-  "outputParameters": {},
+  "outputParameters": {
+    "bookingId": "${book_ride_saga_ref.output.bookingId}"
+  },
   "failureWorkflow": "cab_service_saga_cancellation_wf",
   "schemaVersion": 2,
   "restartable": true,

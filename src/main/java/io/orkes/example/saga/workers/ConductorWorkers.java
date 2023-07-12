@@ -1,6 +1,5 @@
 package io.orkes.example.saga.workers;
 
-import com.netflix.conductor.common.metadata.tasks.Task;
 import com.netflix.conductor.common.metadata.tasks.TaskResult;
 import com.netflix.conductor.sdk.workflow.task.WorkerTask;
 import io.orkes.example.saga.pojos.*;
@@ -40,8 +39,8 @@ public class ConductorWorkers {
     }
 
     @WorkerTask(value = "assign_driver_saga", threadCount = 2, pollingInterval = 300)
-    public Map<String, Object> checkForDriverAssignmentTask(CabAssignmentRequest cabAssignmentRequest) {
-        int driverId = CabAssignmentService.assignDriver(cabAssignmentRequest);
+    public Map<String, Object> checkForDriverAssignmentTask(BookingIdRequestPayload cabAssignmentRequest) {
+        int driverId = CabAssignmentService.assignDriver(cabAssignmentRequest.getBookingId());
 
         Map<String, Object> result = new HashMap<>();
         if(driverId != 0) {
@@ -58,7 +57,7 @@ public class ConductorWorkers {
     public TaskResult checkForPaymentTask(PaymentRequest paymentRequest) {
         TaskResult result = new TaskResult();
 
-        Payment payment = PaymentService.payForBooking(paymentRequest);
+        Payment payment = PaymentService.createPayment(paymentRequest);
         Map<String, Object> output = new HashMap<>();
 
         if(payment.getStatus() == Payment.Status.SUCCESSFUL) {
@@ -66,11 +65,20 @@ public class ConductorWorkers {
             result.setStatus(TaskResult.Status.COMPLETED);
         } else {
             output.put("error", payment.getErrorMsg());
+            output.put("failed_event", "PAYMENT");
             result.setStatus(TaskResult.Status.FAILED);
         }
 
         result.setOutputData(output);
 
+        return result;
+    }
+
+    @WorkerTask(value = "confirm_booking_saga", threadCount = 2, pollingInterval = 300)
+    public Map<String, Object> checkForBookingConfirmation(BookingIdRequestPayload bookingConfirmationReq) {
+        Map<String, Object> result = new HashMap<>();
+        Booking booking = BookingService.getBooking(bookingConfirmationReq.getBookingId());
+        BookingService.confirmBooking(booking);
         return result;
     }
 
@@ -85,4 +93,19 @@ public class ConductorWorkers {
         Map<String, Object> result = new HashMap<>();
         return result;
     }
+
+    @WorkerTask(value = "cancel_payment_saga", threadCount = 2, pollingInterval = 300)
+    public Map<String, Object> checkForPaymentCancellations(BookingIdRequestPayload cancelPaymentRequest) {
+        Map<String, Object> result = new HashMap<>();
+        PaymentService.cancelPayment(cancelPaymentRequest.getBookingId());
+        return result;
+    }
+    @WorkerTask(value = "cancel_booking_saga", threadCount = 2, pollingInterval = 300)
+    public Map<String, Object> checkForBookingCancellations(BookingIdRequestPayload cancelBookingRequest) {
+        Map<String, Object> result = new HashMap<>();
+        Booking booking = BookingService.getBooking(cancelBookingRequest.getBookingId());
+        BookingService.cancelBooking(booking);
+        return result;
+    }
+
 }

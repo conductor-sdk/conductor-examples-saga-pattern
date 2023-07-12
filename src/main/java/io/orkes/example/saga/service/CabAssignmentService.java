@@ -3,7 +3,6 @@ package io.orkes.example.saga.service;
 import io.orkes.example.saga.dao.CabAssignmentDAO;
 import io.orkes.example.saga.pojos.Booking;
 import io.orkes.example.saga.pojos.CabAssignment;
-import io.orkes.example.saga.pojos.CabAssignmentRequest;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Random;
@@ -12,10 +11,9 @@ public class CabAssignmentService {
 
     private static final CabAssignmentDAO cabAssignmentDAO = new CabAssignmentDAO("jdbc:sqlite:cab_saga.db");
 
-    public static int assignDriver(CabAssignmentRequest cabAssignmentRequest) {
+    public static int assignDriver(String bookingId) {
         int driverId = findDriver();
 
-        String bookingId = cabAssignmentRequest.getBookingId();
         Booking booking = BookingService.getBooking(bookingId);
 
         if (booking.getBookingId().isEmpty()) {
@@ -35,7 +33,7 @@ public class CabAssignmentService {
 
         BookingService.assignDriverToBooking(booking, driverId);
 
-        log.info("Assigned driver {} to booking with id: {}", driverId, cabAssignmentRequest.getBookingId());
+        log.info("Assigned driver {} to booking with id: {}", driverId, bookingId);
 
         return driverId;
     }

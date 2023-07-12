@@ -45,6 +45,8 @@ We can use two approaches:
    }'
    ```
    
+A successful booking creation workflow run will look like this:
+   
 #### Triggering the cancellation workflow to simulate rollback of distributed transactions
 
 * Create a booking for rider 3 who doesn't have a payment method seeded.
