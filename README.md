@@ -4,6 +4,15 @@ Sample Java Application demonstrating Saga microservice architecture pattern for
 ## Running this Example
 
 ### Workflow Setup on Orkes Playground
+
+#### Use existing out-of-the-box workflows
+We have already setup these workflows with all the necessary permissions. These can be used directly, if you don't need to modify these workflows.
+1. Booking workflow - https://play.orkes.io/workflowDef/cab_service_saga_booking_wf
+2. Cancellation workflow - https://play.orkes.io/workflowDef/cab_service_saga_cancellation_wf
+
+#### Create your own workflows
+Using the below workflow definitions, you can create a copy of these workflows and customize as per your need. 
+You will have to rename both the workflows to avoid conflicts with the out-of-the-box workflows.
 1. Create booking workflow by uploading workflow definition - [cab_service_saga_booking_wf.json](src/main/resources/cab_service_saga_booking_wf.json)
 2. Create cancellation workflow by uploading workflow definition - [cab_service_saga_cancellation_wf.json](src/main/resources/cab_service_saga_cancellation_wf.json)
 
