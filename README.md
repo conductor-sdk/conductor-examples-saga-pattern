@@ -47,9 +47,8 @@ We can use two approaches:
    
 A successful booking creation workflow run will look like this:
 
-<img width="541" alt="Screenshot 2023-07-11 at 10 11 13 PM" src="https://github.com/conductor-sdk/conductor-examples-saga-pattern/assets/127052609/b0f0a18c-2dd7-4e16-b0ed-67ba0c017492">
+<img width="452" alt="Screenshot 2023-07-11 at 10 15 15 PM" src="https://github.com/conductor-sdk/conductor-examples-saga-pattern/assets/127052609/4db84807-25c2-42e3-83bd-e15340d19a79">
 
-   
 #### Triggering the cancellation workflow to simulate rollback of distributed transactions
 
 * Create a booking for rider 3 who doesn't have a payment method seeded.
