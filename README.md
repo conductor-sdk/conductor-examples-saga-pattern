@@ -78,5 +78,5 @@ A successful booking creation workflow run will look like this:
 
 * In the above workflow diagram, the simulated distributed rollback can be seen. The rollback sequence in case of failure occurring while payment processing is as follows:
   1. Payment is cancelled in the Payment Service
-  2. Driver is unassigned in the Cab Assignment Service
-  3. Booking is cancelled in the Booking Service
+  2. Driver assignment is deactivated the Cab Assignment Service
+  3. Booking is cancelled and driver association is removed in the Booking Service
