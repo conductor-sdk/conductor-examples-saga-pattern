@@ -60,6 +60,7 @@ public class BookingService {
 
     public static boolean cancelBooking(Booking booking) {
         booking.setStatus(Booking.Status.CANCELLED);
+        booking.setDriverId(0);
         log.info("Cancelling booking {}", booking.getBookingId());
         return bookingDAO.updateBooking(booking);
     }

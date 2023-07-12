@@ -67,3 +67,15 @@ A successful booking creation workflow run will look like this:
    ```
 
 * This will cause the workflow to fail and trigger the cancellation workflow.
+* Failed booking workflow run will look like this:
+
+  <img width="452" alt="Screenshot 2023-07-11 at 10 15 15 PM" src="https://github.com/conductor-sdk/conductor-examples-saga-pattern/assets/127052609/4db84807-25c2-42e3-83bd-e15340d19a79">
+
+* A cancellation workflow run will look like this:
+
+  <img width="452" alt="Screenshot 2023-07-11 at 10 15 15 PM" src="https://github.com/conductor-sdk/conductor-examples-saga-pattern/assets/127052609/4db84807-25c2-42e3-83bd-e15340d19a79">
+
+* In the above workflow diagram, the simulated distributed rollback can be seen. The rollback sequence in case of failure occurring while payment processing is as follows:
+  1. Payment is cancelled in the Payment Service
+  2. Driver is unassigned in the Cab Assignment Service
+  3. Booking is cancelled in the Booking Service

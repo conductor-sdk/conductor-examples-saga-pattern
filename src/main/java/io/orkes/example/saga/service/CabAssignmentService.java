@@ -38,6 +38,16 @@ public class CabAssignmentService {
         return driverId;
     }
 
+    public static void cancelAssignment(String bookingId) {
+        Booking booking = BookingService.getBooking(bookingId);
+
+        if (booking.getBookingId().isEmpty()) {
+            log.error("Booking with id {} not found.", bookingId);
+        }
+
+        cabAssignmentDAO.deactivateAssignment(bookingId);
+    }
+
     private static int findDriver() {
         Random random = new Random();
         int driverId = 0;

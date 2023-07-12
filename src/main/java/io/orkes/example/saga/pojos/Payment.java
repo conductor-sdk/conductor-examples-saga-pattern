@@ -10,7 +10,7 @@ public class Payment {
         SUCCESSFUL,
         CANCELED
     }
-    private int id;
+    private String paymentId;
     private String bookingId;
     private double amount;
     private int paymentMethodId;

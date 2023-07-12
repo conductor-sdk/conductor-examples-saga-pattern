@@ -90,9 +90,9 @@ public class BaseDAO {
     private void createAssignmentsTableCreationSqlStmt() {
         String sql = "CREATE TABLE assignments (\n"
                 + "	id integer PRIMARY KEY AUTOINCREMENT,\n"
-                + "	bookingId text NOT NULL,\n"
-                + "	driverId integer NOT NULL,\n"
-                + "	createdAt text NOT NULL,\n"
+                + "	booking_id text NOT NULL,\n"
+                + "	driver_id integer NOT NULL,\n"
+                + "	created_at text NOT NULL,\n"
                 + "	active boolean NOT NULL\n"
                 + ");";
 
@@ -113,7 +113,7 @@ public class BaseDAO {
 
     private void createPaymentsTableCreationSqlStmt() {
         String sql = "CREATE TABLE payments (\n"
-                + "	id integer PRIMARY KEY AUTOINCREMENT,\n"
+                + "	payment_id text PRIMARY KEY,\n"
                 + "	booking_id text NOT NULL,\n"
                 + "	amount number NOT NULL,\n"
                 + "	payment_method_id integer,\n"

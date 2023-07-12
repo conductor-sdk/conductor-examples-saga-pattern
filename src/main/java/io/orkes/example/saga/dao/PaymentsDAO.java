@@ -1,9 +1,7 @@
 package io.orkes.example.saga.dao;
 
-import io.orkes.example.saga.pojos.Booking;
 import io.orkes.example.saga.pojos.Payment;
 import io.orkes.example.saga.pojos.PaymentMethod;
-import io.orkes.example.saga.pojos.PaymentRequest;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -66,21 +64,16 @@ public class PaymentsDAO extends BaseDAO {
         df.setTimeZone(tz);
         String nowAsISO = df.format(new Date());
 
-        String sql = "INSERT INTO payments(booking_id,amount,payment_method_id,createdAt,status) VALUES(?,?,?,?,?) RETURNING id;";
+        String sql = "INSERT INTO payments(payment_id, booking_id, amount, payment_method_id, createdAt, status) VALUES(?,?,?,?,?,?);";
 
         try (Connection conn = this.connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, payment.getBookingId());
-            pstmt.setDouble(2, payment.getAmount());
-            pstmt.setInt(3, payment.getPaymentMethodId());
-            pstmt.setString(4, nowAsISO);
-            pstmt.setString(5, payment.getStatus().name());
-            ResultSet rs = pstmt.executeQuery();
-
-            if (rs.next()) {
-                int id = rs.getInt(1);
-                payment.setId(id);
-                System.out.println("Inserted ID -" + id); // display inserted record
-            }
+            pstmt.setString(1, payment.getPaymentId());
+            pstmt.setString(2, payment.getBookingId());
+            pstmt.setDouble(3, payment.getAmount());
+            pstmt.setInt(4, payment.getPaymentMethodId());
+            pstmt.setString(5, nowAsISO);
+            pstmt.setString(6, payment.getStatus().name());
+            pstmt.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             return e.getMessage();
@@ -89,13 +82,13 @@ public class PaymentsDAO extends BaseDAO {
     }
 
     public String updatePayment(Payment payment) {
-        String sql = "UPDATE payments SET amount=?, payment_method_id=?, status=? WHERE id=?;";
+        String sql = "UPDATE payments SET amount=?, payment_method_id=?, status=? WHERE payment_id=?;";
 
         try (Connection conn = this.connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setDouble(1, payment.getAmount());
             pstmt.setInt(2, payment.getPaymentMethodId());
             pstmt.setString(3, payment.getStatus().name());
-            pstmt.setInt(4, payment.getId());
+            pstmt.setString(4, payment.getPaymentId());
             pstmt.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());

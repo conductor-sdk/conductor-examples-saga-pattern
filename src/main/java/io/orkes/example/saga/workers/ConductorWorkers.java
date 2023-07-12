@@ -59,9 +59,11 @@ public class ConductorWorkers {
 
         Payment payment = PaymentService.createPayment(paymentRequest);
         Map<String, Object> output = new HashMap<>();
+        output.put("bookingId", payment.getBookingId());
+        output.put("paymentId", payment.getPaymentId());
+        output.put("paymentStatus", payment.getStatus().name());
 
         if(payment.getStatus() == Payment.Status.SUCCESSFUL) {
-            output.put("bookingId", payment.getBookingId());
             result.setStatus(TaskResult.Status.COMPLETED);
         } else {
             output.put("error", payment.getErrorMsg());
@@ -100,6 +102,14 @@ public class ConductorWorkers {
         PaymentService.cancelPayment(cancelPaymentRequest.getBookingId());
         return result;
     }
+
+    @WorkerTask(value = "cancel_driver_assignment_saga", threadCount = 2, pollingInterval = 300)
+    public Map<String, Object> checkForDriverAssignmentCancellations(BookingIdRequestPayload driverCancellationReq) {
+        Map<String, Object> result = new HashMap<>();
+        CabAssignmentService.cancelAssignment(driverCancellationReq.getBookingId());
+        return result;
+    }
+
     @WorkerTask(value = "cancel_booking_saga", threadCount = 2, pollingInterval = 300)
     public Map<String, Object> checkForBookingCancellations(BookingIdRequestPayload cancelBookingRequest) {
         Map<String, Object> result = new HashMap<>();

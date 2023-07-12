@@ -4,18 +4,39 @@
   "version": 1,
   "tasks": [
     {
-      "name": "switch_rollback_from_task",
-      "taskReferenceName": "switch_rollback_from_task_ref",
+      "name": "json_transform_task_saga",
+      "taskReferenceName": "json_transform_task_saga_ref",
       "inputParameters": {
-        "rollbackFromEvent": ""
+        "parent": "${workflow.input.failedWorkflow}",
+        "queryExpression": "{ bookingId: .parent.output.bookingId, failedTaskName: .parent.failedReferenceTaskNames[0] }"
+      },
+      "type": "JSON_JQ_TRANSFORM",
+      "decisionCases": {},
+      "defaultCase": [],
+      "forkTasks": [],
+      "startDelay": 0,
+      "joinOn": [],
+      "optional": false,
+      "defaultExclusiveJoinTask": [],
+      "asyncComplete": false,
+      "loopOver": [],
+      "onStateChange": {}
+    },
+    {
+      "name": "switch_rollback_from_task_saga",
+      "taskReferenceName": "switch_rollback_from_task_saga_ref",
+      "inputParameters": {
+        "failedTaskName": "${json_transform_task_saga_ref.output.result.failedTaskName}"
       },
       "type": "SWITCH",
       "decisionCases": {
-        "payment": [
+        "make_payment_saga_ref": [
           {
             "name": "cancel_payment_saga",
             "taskReferenceName": "cancel_payment_saga_ref",
-            "inputParameters": {},
+            "inputParameters": {
+              "bookingId": "${json_transform_task_saga_ref.output.result.bookingId}"
+            },
             "type": "SIMPLE",
             "decisionCases": {},
             "defaultCase": [],
@@ -31,7 +52,9 @@
           {
             "name": "cancel_driver_assignment_saga",
             "taskReferenceName": "cancel_driver_assignment_saga_ref",
-            "inputParameters": {},
+            "inputParameters": {
+              "bookingId": "${json_transform_task_saga_ref.output.result.bookingId}"
+            },
             "type": "SIMPLE",
             "decisionCases": {},
             "defaultCase": [],
@@ -45,11 +68,13 @@
             "onStateChange": {}
           }
         ],
-        "assignment": [
+        "assign_driver_saga_ref": [
           {
             "name": "cancel_driver_assignment_saga",
             "taskReferenceName": "cancel_driver_assignment_saga_1_ref",
-            "inputParameters": {},
+            "inputParameters": {
+              "bookingId": "${json_transform_task_saga_ref.output.result.bookingId}"
+            },
             "type": "SIMPLE",
             "decisionCases": {},
             "defaultCase": [],
@@ -73,13 +98,15 @@
       "asyncComplete": false,
       "loopOver": [],
       "evaluatorType": "value-param",
-      "expression": "rollbackFromEvent",
+      "expression": "failedTaskName",
       "onStateChange": {}
     },
     {
       "name": "cancel_booking_saga",
       "taskReferenceName": "cancel_booking_saga_ref",
-      "inputParameters": {},
+      "inputParameters": {
+        "bookingId": "${workflow.input.failedWorkflow.output.bookingId}"
+      },
       "type": "SIMPLE",
       "decisionCases": {},
       "defaultCase": [],
@@ -104,7 +131,9 @@
           {
             "name": "notify_customer_saga",
             "taskReferenceName": "notify_customer_saga_failure_ref",
-            "inputParameters": {},
+            "inputParameters": {
+              "bookingId": "${workflow.input.failedWorkflow.output.bookingId}"
+            },
             "type": "SIMPLE",
             "decisionCases": {},
             "defaultCase": [],
@@ -122,7 +151,9 @@
           {
             "name": "notify_driver_saga",
             "taskReferenceName": "notify_driver_saga_failure_ref",
-            "inputParameters": {},
+            "inputParameters": {
+              "bookingId": "${workflow.input.failedWorkflow.output.bookingId}"
+            },
             "type": "SIMPLE",
             "decisionCases": {},
             "defaultCase": [],
@@ -155,8 +186,8 @@
       "forkTasks": [],
       "startDelay": 0,
       "joinOn": [
-        "notify_customer_failure_ref",
-        "notify_driver_failure_ref"
+        "notify_customer_saga_failure_ref",
+        "notify_driver_saga_failure_ref"
       ],
       "optional": false,
       "defaultExclusiveJoinTask": [],
@@ -165,13 +196,15 @@
       "onStateChange": {}
     }
   ],
-  "inputParameters": [],
+  "inputParameters": [
+    ""
+  ],
   "outputParameters": {},
   "failureWorkflow": "",
   "schemaVersion": 2,
   "restartable": true,
   "workflowStatusListenerEnabled": false,
-  "ownerEmail": "tester@email.com",
+  "ownerEmail": "abhishek.gupta@orkes.io",
   "timeoutPolicy": "ALERT_ONLY",
   "timeoutSeconds": 0,
   "variables": {},

@@ -6,27 +6,38 @@ import io.orkes.example.saga.pojos.PaymentMethod;
 import io.orkes.example.saga.pojos.PaymentRequest;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.UUID;
+
 @Slf4j
 public class PaymentService {
 
     private static final PaymentsDAO paymentsDAO = new PaymentsDAO("jdbc:sqlite:cab_saga.db");
 
     public static Payment createPayment(PaymentRequest paymentRequest) {
+        UUID uuid = UUID.randomUUID();
+        String uuidAsString = uuid.toString();
+
         int riderId = paymentRequest.getRiderId();
 
         PaymentMethod paymentMethod = new PaymentMethod();
         paymentsDAO.readPaymentMethod(riderId, paymentMethod);
 
         Payment payment = new Payment();
+        payment.setPaymentId(uuidAsString);
         payment.setBookingId(paymentRequest.getBookingId());
         payment.setAmount(40.0);
         payment.setPaymentMethodId(0);
         payment.setStatus(Payment.Status.PENDING);
-        paymentsDAO.insertPayment(payment);
 
+        // Check if returned error is non-empty, i.e failure
+        if (!paymentsDAO.insertPayment(payment).isEmpty()) {
+            log.error("Failed to process payment for booking {}", paymentRequest.getBookingId());
+            payment.setErrorMsg("Payment creation failure");
+            payment.setStatus(Payment.Status.FAILED);
+        }
         // Check for payment methods for the rider
         // If exists, try to make the payment
-        if (paymentMethod.getId() > 0) {
+        else if (paymentMethod.getId() > 0) {
             payment.setPaymentMethodId(paymentMethod.getId());
             // Call external Payments API
             if(makePayment(payment)) {
@@ -38,12 +49,13 @@ public class PaymentService {
             payment.setStatus(Payment.Status.FAILED);
         }
 
+        // Record final status
         paymentsDAO.updatePayment(payment);
 
         return payment;
     }
 
-    public static boolean cancelPayment(String bookingId) {
+    public static boolean cancelPayment(String paymentId) {
         // Cancel Payment in DB
         return true;
     }

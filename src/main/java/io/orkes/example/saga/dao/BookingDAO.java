@@ -63,6 +63,7 @@ public class BookingDAO extends BaseDAO {
             while (rs.next()) {
                 booking.setBookingId(rs.getString("bookingId"));
                 booking.setRiderId(rs.getInt("riderId"));
+                booking.setDriverId(rs.getInt("driverId"));
                 booking.setPickUpLocation(rs.getString("pickUpLocation"));
                 booking.setDropOffLocation(rs.getString("dropOffLocation"));
             }

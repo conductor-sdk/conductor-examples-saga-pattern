@@ -22,13 +22,27 @@ public class CabAssignmentDAO extends BaseDAO {
         df.setTimeZone(tz);
         String nowAsISO = df.format(new Date());
 
-        String sql = "INSERT INTO assignments(bookingId,driverId,createdAt,active) VALUES(?,?,?,?)";
+        String sql = "INSERT INTO assignments(booking_id,driver_id,created_at,active) VALUES(?,?,?,?)";
 
         try (Connection conn = this.connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, cabAssignment.getBookingId());
             pstmt.setInt(2, cabAssignment.getDriverId());
             pstmt.setString(3, nowAsISO);
             pstmt.setBoolean(4, cabAssignment.getActive());
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+        return true;
+    }
+
+    public boolean deactivateAssignment(String bookingId) {
+        String sql = "UPDATE assignments SET active=? WHERE booking_id=?;";
+
+        try (Connection conn = this.connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setBoolean(1, false);
+            pstmt.setString(2, bookingId);
             pstmt.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
