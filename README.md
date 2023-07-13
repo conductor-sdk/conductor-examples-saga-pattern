@@ -19,9 +19,13 @@ You will have to rename both the workflows to avoid conflicts with the out-of-th
 ### Running the application and workers locally
 
 1. Clone the project to your local
-2. Update the application.properties with a `orkes.security.client.key` and `orkes.security.client.secret` that can connect to your conductor instance at `orkes.conductor.server.url`
-    1. For connecting to playground - refer to this [article](https://orkes.io/content/how-to-videos/access-key-and-secret) to get a key and secret
-    2. For connecting locally - follow the instructions [here (Install and Run Locally)](https://orkes.io/content/get-orkes-conductor)
+2. Update following properties in [application.properties](src/main/resources/application.properties)
+   1. `server.port` is set to 8081 by default, feel free to change if it's already used. This is the port for the Saga application, not conductor.
+   2. `conductor.server.url` is set to https://play.orkes.io/api by default, but if running conductor locally, change to http://localhost:8080/api
+   3. `conductor.security.client.key-id` and `conductor.security.client.secret` are NOT set, please set them
+      * When connecting to playground - refer to this [article](https://orkes.io/content/how-to-videos/access-key-and-secret) to get a key and secret
+      * When connecting locally - follow the instructions [here (Install and Run Locally)](https://orkes.io/content/get-orkes-conductor)
+   4. `conductor.worker.all.domain` is set to 'saga' by default, please change it to <yourname> or something else to avoid conflicts with workflows and workers spun up by others
 3. From the root project folder, run `mvn spring-boot:run`
 
 ### Booking Creation
@@ -29,30 +33,35 @@ You will have to rename both the workflows to avoid conflicts with the out-of-th
 We can use two approaches:
 1. Call the triggerRideBookingFlow API from within the Application
    ```
-   curl --location 'http://localhost:8081/triggerRideBookingFlow' \
-   --header 'Content-Type: application/json' \
-   --data '{
-   "pickUpLocation": "150 East 52nd Street, New York, NY 10045",
-   "dropOffLocation": "120 West 81st Street, New York, NY 10012",
-   "riderId": 1
-   }'
+    curl --location 'http://localhost:8081/triggerRideBookingFlow' \
+    --header 'Content-Type: application/json' \
+    --data '{
+        "pickUpLocation": "150 East 52nd Street, New York, NY 10045",
+        "dropOffLocation": "120 West 81st Street, New York, NY 10012",
+        "riderId": 1
+    }'
    ```
 2. Directly call the Orkes API for creating a workflow
    1. Generate a JWT token by following steps mentioned [here](https://orkes.io/content/access-control-and-security/applications#generating-token)
-   2. Make an HTTPS request from postman/curl similar to below:
-   ```
-   curl --location 'https://play.orkes.io/api/workflow' \
-   --header 'X-Authorization: <JWT Token>' \
-   --data '{
-       "name": "cab_service_saga_booking_wf",
-       "version": 1,
-       "input": {
-           "pickUpLocation": "150 East 52nd Street, New York, NY 10045",
-           "dropOffLocation": "120 West 81st Street, New York, NY 10012",
-           "riderId": 1
-       }
-   }'
-   ```
+   2. Make an HTTPS request from postman/curl similar to below after replacing <JWT Token>:
+    ``` 
+    curl --location 'https://play.orkes.io/api/workflow' \
+    --header "Content-Type: application/json" \
+    --header 'X-Authorization: <JWT Token>' \
+    --request POST \
+    --data '{
+        "name": "cab_service_saga_booking_wf",
+        "version": 1,
+        "input": {
+            "pickUpLocation": "250 East 52nd Street, New York, NY 10045",
+            "dropOffLocation": "120 West 81st Street, New York, NY 10012",
+            "riderId": 1
+        },
+        "taskToDomain": {
+            "*": "saga"
+        }
+    }'
+    ```
    
 A successful booking creation workflow run will look like this:
 
@@ -61,19 +70,24 @@ A successful booking creation workflow run will look like this:
 #### Triggering the cancellation workflow to simulate rollback of distributed transactions
 
 * Create a booking for rider 3 who doesn't have a payment method seeded.
-   ```
-   curl --location 'https://play.orkes.io/api/workflow' \
-   --header 'X-Authorization: <JWT Token>' \
-   --data '{
-       "name": "cab_service_saga_booking_wf",
-       "version": 1,
-       "input": {
-           "pickUpLocation": "150 East 52nd Street, New York, NY 10045",
-           "dropOffLocation": "120 West 81st Street, New York, NY 10012",
-           "riderId": 3
-       }
-   }'
-   ```
+``` 
+curl --location 'https://play.orkes.io/api/workflow' \
+--header "Content-Type: application/json" \
+--header 'X-Authorization: <JWT Token>' \
+--request POST \
+--data '{
+    "name": "cab_service_saga_booking_wf",
+    "version": 1,
+    "input": {
+        "pickUpLocation": "250 East 52nd Street, New York, NY 10045",
+        "dropOffLocation": "120 West 81st Street, New York, NY 10012",
+        "riderId": 3
+    },
+    "taskToDomain": {
+        "*": "saga"
+    }
+}'
+```
 
 * This will cause the workflow to fail and trigger the cancellation workflow.
 * Failed booking workflow run will look like this:

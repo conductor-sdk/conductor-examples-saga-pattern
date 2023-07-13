@@ -5,6 +5,7 @@ import io.orkes.conductor.client.WorkflowClient;
 import io.orkes.example.saga.pojos.BookingRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -17,6 +18,8 @@ import java.util.UUID;
 public class WorkflowService {
 
     private final WorkflowClient workflowClient;
+    private final Environment environment;
+    private final String TASK_DOMAIN_PROPERTY = "conductor.worker.all.domain";
 
     public Map<String, Object> startRideBookingWorkflow(BookingRequest bookingRequest) {
         UUID uuid = UUID.randomUUID();
@@ -28,6 +31,14 @@ public class WorkflowService {
         request.setVersion(1);
         request.setCorrelationId(bookingRequestId);
 
+        String domain = environment.getProperty(TASK_DOMAIN_PROPERTY, String.class, "");
+
+        if (!domain.isEmpty()) {
+            Map<String, String> taskToDomain = new HashMap<>();
+            taskToDomain.put("*", domain);
+            request.setTaskToDomain(taskToDomain);
+        }
+
         Map<String, Object> inputData = new HashMap<>();
         inputData.put("riderId", bookingRequest.getRiderId());
         inputData.put("dropOffLocation", bookingRequest.getDropOffLocation());
@@ -38,13 +49,11 @@ public class WorkflowService {
         try {
             workflowId = workflowClient.startWorkflow(request);
             log.info("Workflow id: {}", workflowId);
-        }
-        catch(Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace(System.out);
             return Map.of("error", "Booking creation failure", "detail", ex.toString());
         }
 
-    return Map.of("workflowId", workflowId);
- }
-
+        return Map.of("workflowId", workflowId);
+    }
 }
