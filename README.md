@@ -43,7 +43,7 @@ We can use two approaches:
    ```
 2. Directly call the Orkes API for creating a workflow
    1. Generate a JWT token by following steps mentioned [here](https://orkes.io/content/access-control-and-security/applications#generating-token)
-   2. Make an HTTPS request from postman/curl similar to below after replacing <JWT Token>:
+   2. Make an HTTPS request from postman/curl similar to below after replacing \<JWT Token\>:
     ``` 
     curl --location 'https://play.orkes.io/api/workflow' \
     --header "Content-Type: application/json" \
