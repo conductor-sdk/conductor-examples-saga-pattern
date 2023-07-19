@@ -20,7 +20,7 @@ public class ConductorWorkers {
     /**
      * Note: Using this setting, up to 5 tasks will run in parallel, with tasks being polled every 200ms
      */
-    @WorkerTask(value = "book_ride_saga", threadCount = 3, pollingInterval = 300)
+    @WorkerTask(value = "book_ride", threadCount = 3, pollingInterval = 300)
     public TaskResult checkForBookingRideTask(BookingRequest bookingRequest) {
         String bookingId = BookingService.createBooking(bookingRequest);
 
@@ -38,7 +38,7 @@ public class ConductorWorkers {
         return result;
     }
 
-    @WorkerTask(value = "assign_driver_saga", threadCount = 2, pollingInterval = 300)
+    @WorkerTask(value = "assign_driver", threadCount = 2, pollingInterval = 300)
     public Map<String, Object> checkForDriverAssignmentTask(BookingIdRequestPayload cabAssignmentRequest) {
         int driverId = CabAssignmentService.assignDriver(cabAssignmentRequest.getBookingId());
 
@@ -53,7 +53,7 @@ public class ConductorWorkers {
         return result;
     }
 
-    @WorkerTask(value = "make_payment_saga", threadCount = 2, pollingInterval = 300)
+    @WorkerTask(value = "make_payment", threadCount = 2, pollingInterval = 300)
     public TaskResult checkForPaymentTask(PaymentRequest paymentRequest) {
         TaskResult result = new TaskResult();
 
@@ -76,7 +76,7 @@ public class ConductorWorkers {
         return result;
     }
 
-    @WorkerTask(value = "confirm_booking_saga", threadCount = 2, pollingInterval = 300)
+    @WorkerTask(value = "confirm_booking", threadCount = 2, pollingInterval = 300)
     public Map<String, Object> checkForBookingConfirmation(BookingIdRequestPayload bookingConfirmationReq) {
         Map<String, Object> result = new HashMap<>();
         Booking booking = BookingService.getBooking(bookingConfirmationReq.getBookingId());
@@ -84,33 +84,33 @@ public class ConductorWorkers {
         return result;
     }
 
-    @WorkerTask(value = "notify_driver_saga", threadCount = 2, pollingInterval = 300)
+    @WorkerTask(value = "notify_driver", threadCount = 2, pollingInterval = 300)
     public Map<String, Object> checkForDriverNotifications(DriverNotificationRequest driverNotificationRequest) {
         Map<String, Object> result = new HashMap<>();
         return result;
     }
 
-    @WorkerTask(value = "notify_customer_saga", threadCount = 2, pollingInterval = 300)
+    @WorkerTask(value = "notify_customer", threadCount = 2, pollingInterval = 300)
     public Map<String, Object> checkForCustomerNotifications(Booking booking) {
         Map<String, Object> result = new HashMap<>();
         return result;
     }
 
-    @WorkerTask(value = "cancel_payment_saga", threadCount = 2, pollingInterval = 300)
+    @WorkerTask(value = "cancel_payment", threadCount = 2, pollingInterval = 300)
     public Map<String, Object> checkForPaymentCancellations(BookingIdRequestPayload cancelPaymentRequest) {
         Map<String, Object> result = new HashMap<>();
         PaymentService.cancelPayment(cancelPaymentRequest.getBookingId());
         return result;
     }
 
-    @WorkerTask(value = "cancel_driver_assignment_saga", threadCount = 2, pollingInterval = 300)
+    @WorkerTask(value = "cancel_driver_assignment", threadCount = 2, pollingInterval = 300)
     public Map<String, Object> checkForDriverAssignmentCancellations(BookingIdRequestPayload driverCancellationReq) {
         Map<String, Object> result = new HashMap<>();
         CabAssignmentService.cancelAssignment(driverCancellationReq.getBookingId());
         return result;
     }
 
-    @WorkerTask(value = "cancel_booking_saga", threadCount = 2, pollingInterval = 300)
+    @WorkerTask(value = "cancel_booking", threadCount = 2, pollingInterval = 300)
     public Map<String, Object> checkForBookingCancellations(BookingIdRequestPayload cancelBookingRequest) {
         Map<String, Object> result = new HashMap<>();
         Booking booking = BookingService.getBooking(cancelBookingRequest.getBookingId());
