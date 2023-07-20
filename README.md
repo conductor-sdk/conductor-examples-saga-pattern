@@ -19,13 +19,11 @@ You will have to rename both the workflows to avoid conflicts with the out-of-th
 ### Running the application and workers locally
 
 1. Clone the project to your local
-2. Update following properties in [application.properties](src/main/resources/application.properties)
-   1. `server.port` is set to 8081 by default, feel free to change if it's already used. This is the port for the Saga application, not conductor.
-   2. `conductor.server.url` is set to https://play.orkes.io/api by default, but if running conductor locally, change to http://localhost:8080/api
-   3. `conductor.security.client.key-id` and `conductor.security.client.secret` are NOT set, please set them
+2. Update following properties in [application.properties](src/main/resources/application.properties)   
+   1. `conductor.security.client.key-id` and `conductor.security.client.secret` are **NOT** set, please set them
       * When connecting to playground - refer to this [article](https://orkes.io/content/how-to-videos/access-key-and-secret) to get a key and secret
       * When connecting locally - follow the instructions [here (Install and Run Locally)](https://orkes.io/content/get-orkes-conductor)
-   4. `conductor.worker.all.domain` is set to 'saga' by default, please change it to <yourname> or something else to avoid conflicts with workflows and workers spun up by others
+   2. `conductor.worker.all.domain` is set to 'saga' by default, please change it to <yourname> or something else to avoid conflicts with workflows and workers spun up by others
 3. From the root project folder, run `mvn spring-boot:run`
 
 ### Booking Creation
