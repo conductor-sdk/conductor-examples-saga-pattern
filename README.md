@@ -1,5 +1,6 @@
-# conductor-examples-saga-pattern
+# SAGA Pattern Implementating with Conductor
 Sample Java Application demonstrating Saga microservice architecture pattern for a cab booking app
+See: https://medium.com/orkes/saga-pattern-in-distributed-systems-f11b9a2221f5 for a complete blog
 
 ## Running this Example
 
