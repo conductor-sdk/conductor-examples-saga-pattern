@@ -15,7 +15,8 @@ public class BaseDAO {
         try {
             conn = DriverManager.getConnection(this.url);
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.out.println(e.getStackTrace());
+            throw new RuntimeException(e.getMessage());
         }
         return conn;
     }
