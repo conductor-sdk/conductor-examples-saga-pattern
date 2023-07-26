@@ -5,6 +5,11 @@ See: https://medium.com/orkes/saga-pattern-in-distributed-systems-f11b9a2221f5 f
 
 ## Running this Example
 
+### Environment setup
+1. Install JAVA 17 - https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html
+2. Install sqlite - https://www.tutorialspoint.com/sqlite/sqlite_installation.htm.
+   If using brew, you can just run ```brew install sqlite```
+
 ### Workflow Setup on Orkes Playground
 
 #### Use existing out-of-the-box workflows
