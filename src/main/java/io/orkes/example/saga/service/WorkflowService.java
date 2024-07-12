@@ -40,9 +40,7 @@ public class WorkflowService {
         }
 
         Map<String, Object> inputData = new HashMap<>();
-        inputData.put("riderId", bookingRequest.getRiderId());
-        inputData.put("dropOffLocation", bookingRequest.getDropOffLocation());
-        inputData.put("pickUpLocation", bookingRequest.getPickUpLocation());
+        inputData.put("bookingRequest", bookingRequest);
         request.setInput(inputData);
 
         String workflowId = "";

@@ -50,7 +50,7 @@ public class BaseDAO {
     }
 
     private void createBookingsTableCreationSqlStmt() {
-        String sql = "CREATE TABLE bookings (\n"
+        String sql = "CREATE TABLE IF NOT EXISTS bookings (\n"
                 + "	bookingId text PRIMARY KEY,\n"
                 + "	riderId integer NOT NULL,\n"
                 + "	driverId integer,\n"
@@ -64,7 +64,7 @@ public class BaseDAO {
     }
 
     private void createRidersTableCreationSqlStmt() {
-        String sql = "CREATE TABLE riders (\n"
+        String sql = "CREATE TABLE IF NOT EXISTS riders (\n"
                 + "	id integer PRIMARY KEY AUTOINCREMENT,\n"
                 + "	name text NOT NULL,\n"
                 + "	contact text\n"
@@ -76,7 +76,7 @@ public class BaseDAO {
     }
 
     private void createDriversTableCreationSqlStmt() {
-        String sql = "CREATE TABLE drivers (\n"
+        String sql = "CREATE TABLE IF NOT EXISTS drivers (\n"
                 + "	id integer PRIMARY KEY AUTOINCREMENT,\n"
                 + "	name text NOT NULL,\n"
                 + "	contact text\n"
@@ -88,7 +88,7 @@ public class BaseDAO {
     }
 
     private void createAssignmentsTableCreationSqlStmt() {
-        String sql = "CREATE TABLE assignments (\n"
+        String sql = "CREATE TABLE IF NOT EXISTS assignments (\n"
                 + "	id integer PRIMARY KEY AUTOINCREMENT,\n"
                 + "	booking_id text NOT NULL,\n"
                 + "	driver_id integer NOT NULL,\n"
@@ -100,7 +100,7 @@ public class BaseDAO {
     }
 
     private void createPaymentMethodsTableCreationSqlStmt() {
-        String sql = "CREATE TABLE payment_methods (\n"
+        String sql = "CREATE TABLE IF NOT EXISTS payment_methods (\n"
                 + "	id integer PRIMARY KEY AUTOINCREMENT,\n"
                 + "	rider_id integer NOT NULL,\n"
                 + "	details text NOT NULL\n"
@@ -112,7 +112,7 @@ public class BaseDAO {
     }
 
     private void createPaymentsTableCreationSqlStmt() {
-        String sql = "CREATE TABLE payments (\n"
+        String sql = "CREATE TABLE IF NOT EXISTS payments (\n"
                 + "	payment_id text PRIMARY KEY,\n"
                 + "	booking_id text NOT NULL,\n"
                 + "	amount number NOT NULL,\n"

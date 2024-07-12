@@ -1,6 +1,7 @@
 package io.orkes.example.saga.workers;
 
 import com.netflix.conductor.common.metadata.tasks.TaskResult;
+import com.netflix.conductor.sdk.workflow.task.InputParam;
 import com.netflix.conductor.sdk.workflow.task.WorkerTask;
 import io.orkes.example.saga.pojos.*;
 import io.orkes.example.saga.service.BookingService;
@@ -21,7 +22,7 @@ public class ConductorWorkers {
      * Note: Using this setting, up to 5 tasks will run in parallel, with tasks being polled every 200ms
      */
     @WorkerTask(value = "book_ride", threadCount = 3, pollingInterval = 300)
-    public TaskResult checkForBookingRideTask(BookingRequest bookingRequest) {
+    public TaskResult checkForBookingRideTask(@InputParam("bookingRequest") BookingRequest bookingRequest) {
         String bookingId = BookingService.createBooking(bookingRequest);
 
         TaskResult result = new TaskResult();

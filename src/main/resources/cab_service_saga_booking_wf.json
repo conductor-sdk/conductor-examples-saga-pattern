@@ -7,9 +7,7 @@
       "name": "book_ride",
       "taskReferenceName": "book_ride_ref",
       "inputParameters": {
-        "riderId": "${workflow.input.riderId}",
-        "pickUpLocation": "${workflow.input.pickUpLocation}",
-        "dropOffLocation": "${workflow.input.dropOffLocation}"
+        "bookingRequest": "${workflow.input.bookingRequest}"
       },
       "type": "SIMPLE",
       "decisionCases": {},
@@ -46,7 +44,7 @@
       "taskReferenceName": "make_payment_ref",
       "inputParameters": {
         "bookingId": "${assign_driver_ref.output.bookingId}",
-        "riderId": "${workflow.input.riderId}"
+        "riderId": "${workflow.input.bookingRequest.riderId}"
       },
       "type": "SIMPLE",
       "decisionCases": {},
@@ -91,11 +89,11 @@
             "name": "notify_customer",
             "taskReferenceName": "notify_customer_ref",
             "inputParameters": {
-              "riderId": "${workflow.input.riderId}",
+              "riderId": "${workflow.input.bookingRequest.riderId}",
               "driverId": "${assign_driver_ref.output.driverId}",
-              "dropOffLocation": "${workflow.input.dropOffLocation}",
+              "dropOffLocation": "${workflow.input.bookingRequest.dropOffLocation}",
               "bookingId": "${book_ride_ref.output.bookingId}",
-              "pickUpLocation": "${workflow.input.pickUpLocation}"
+              "pickUpLocation": "${workflow.input.bookingRequest.pickUpLocation}"
             },
             "type": "SIMPLE",
             "decisionCases": {},
@@ -117,8 +115,8 @@
             "inputParameters": {
               "bookingId": "${book_ride_ref.output.bookingId}",
               "driverId": "${assign_driver_ref.output.driverId}",
-              "pickUp": "${workflow.input.pickUpLocation}",
-              "dropOff": "${workflow.input.dropOffLocation}"
+              "pickUp": "${workflow.input.bookingRequest.pickUpLocation}",
+              "dropOff": "${workflow.input.bookingRequest.dropOffLocation}"
             },
             "type": "SIMPLE",
             "decisionCases": {},
