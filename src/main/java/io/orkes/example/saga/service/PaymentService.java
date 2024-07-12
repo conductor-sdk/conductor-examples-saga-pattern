@@ -37,7 +37,7 @@ public class PaymentService {
         }
         // Check for payment methods for the rider
         // If exists, try to make the payment
-        else if (paymentMethod.getId() > 0) {
+        else if (paymentMethod.getId() >= 0) {
             payment.setPaymentMethodId(paymentMethod.getId());
             // Call external Payments API
             if(makePayment(payment)) {

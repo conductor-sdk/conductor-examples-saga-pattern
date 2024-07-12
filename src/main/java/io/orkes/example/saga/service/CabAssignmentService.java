@@ -4,6 +4,7 @@ import io.orkes.example.saga.dao.CabAssignmentDAO;
 import io.orkes.example.saga.pojos.Booking;
 import io.orkes.example.saga.pojos.CabAssignment;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.StringUtils;
 
 import java.util.Random;
 @Slf4j
@@ -41,8 +42,9 @@ public class CabAssignmentService {
     public static void cancelAssignment(String bookingId) {
         Booking booking = BookingService.getBooking(bookingId);
 
-        if (booking.getBookingId().isEmpty()) {
+        if (booking.getBookingId() == null) {
             log.error("Booking with id {} not found.", bookingId);
+            return;
         }
 
         cabAssignmentDAO.deactivateAssignment(bookingId);
